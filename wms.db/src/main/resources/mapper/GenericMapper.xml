@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sven.wms.db.dao.mapper.GenericMapper">
+
+
+    <sql id="wherecondition">
+        <if test="whereconstans != null and whereconstans != ''">
+            ${whereconstans}
+        </if>
+    </sql>
+    <sql id="wherevar">
+        <if test="pkList != null and pkList.size() > 0">
+            <foreach item="item" collection="pkList" separator=" and ">
+                ${item.key}
+                <choose>
+                    <when test="item.sqlValue != null and item.sqlValue != '' ">
+                        = ${item.sqlValue}
+                    </when>
+                    <when test="item.value != null">
+                        = #{item.value}
+                    </when>
+                    <when test="item.listValue != null and item.listValue.size() > 0 ">
+                        in (
+                        <foreach item="itemListValue" collection="item.listValue" separator=",">
+                            #{itemListValue}
+                        </foreach>
+                        )
+                    </when>
+                    <otherwise>
+                        is null
+                    </otherwise>
+                </choose>
+            </foreach>
+        </if>
+    </sql>
+
+    <!--- item.value动态sql中,传入的变量都是对象,而不是String.因此在判断是否为空时,统一判断是否为null,不单独判断''的情况,因此如果类型为字符串,值为''时需要在外部进行格式化值 -->
+
+    <select id="executeSql" resultType="com.sven.wms.core.entity.vo.LowerCaseResultMap" parameterType="java.lang.String">
+        ${_parameter}
+    </select>
+    
+    <insert id="executeInsertSql" parameterType="java.lang.String">
+        ${_parameter}
+    </insert>
+    
+    <update id="executeUpdateSql" parameterType="java.lang.String">
+        ${_parameter}
+    </update>
+    
+    <update id="executeDeleteSql" parameterType="java.lang.String">
+        ${_parameter}
+    </update>
+
+    <select id="selectCountSql" parameterType="java.lang.String" resultType="int">
+        ${_parameter}
+    </select>
+
+    <select id="selectOneResult" parameterType="java.lang.String" resultType="java.lang.Object">
+        ${_parameter}
+    </select>
+
+    
+    <select id="executeDynamicSql" resultType="com.sven.wms.core.entity.vo.LowerCaseResultMap" parameterType="java.util.Map">
+        ${select_sql}
+        <where>
+            <include refid="wherecondition"/>
+            and
+            <include refid="wherevar"/>
+        </where>
+    </select>
+    
+    <insert id="insertDynamicTable" parameterType="java.util.Map">
+        insert into ${tableName}
+        (
+        <foreach collection="columnList" item="item" separator=",">
+            ${item.column}
+        </foreach>
+        )
+        values
+        (
+        <foreach collection="columnList" item="item" separator=",">
+            <choose>
+                <when test="item.sqlValue != null and item.sqlValue != '' ">
+                    ${item.sqlValue}
+                </when>
+                <when test="item.value != null ">
+                    #{item.value}
+                </when>
+                <otherwise>
+                    null
+                </otherwise>
+            </choose>
+        </foreach>
+        )
+    </insert>
+    
+    <insert id="executeDynamicSelectInsert" parameterType="java.util.Map">
+        insert into ${targetTableName}
+        (
+        <foreach collection="columnList" item="item" separator=",">
+            ${item.column}
+        </foreach>
+        )
+        select
+        <foreach collection="columnList" item="item" separator=",">
+            <choose>
+                <when test="item.sqlValue != null and item.sqlValue != '' ">
+                    ${item.sqlValue}
+                </when>
+                <otherwise>
+                    ${item.value}
+                </otherwise>
+            </choose>
+        </foreach>
+        from ${sourceTableName}
+        <where>
+            <include refid="wherecondition"/>
+            and
+            <include refid="wherevar"/>
+        </where>
+    </insert>
+    
+    <update id="updateDynamicTable" parameterType="java.util.Map">
+        update ${tableName}
+        set
+        <foreach item="item" collection="columnList" separator=",">
+            ${item.column} =
+            <choose>
+                <when test="item.sqlValue != null and item.sqlValue != '' ">
+                    ${item.sqlValue}
+                </when>
+                <when test="item.value != null ">
+                    #{item.value}
+                </when>
+                <otherwise>
+                    null
+                </otherwise>
+            </choose>
+        </foreach>
+        <where>
+            <include refid="wherecondition"/>
+            and
+            <include refid="wherevar"/>
+        </where>
+    </update>
+    
+    <delete id="deleteDynamicTable" parameterType="java.util.Map">
+        delete from ${tableName}
+        <where>
+            <include refid="wherecondition"/>
+            and
+            <include refid="wherevar"/>
+        </where>
+    </delete>
+    
+    <select id="callProcedure" parameterType="java.lang.String" statementType="CALLABLE">
+		${_parameter}
+	</select>
+</mapper>

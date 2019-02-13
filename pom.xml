@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.sven</groupId>
+    <artifactId>wms.project</artifactId>
+    <version>0.1-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <name>wms.project</name>
+    <description>Website Management System</description>
+    <organization>
+    </organization>
+
+    <modules>
+        <module>wms.parent</module>
+        <module>wms.service</module>
+        <module>wms.db</module>
+        <module>wms.service.core</module>
+        <module>wms.service.tasks.api</module>
+        <module>wms.service.tasks</module>
+        <module>wms.service.business.api</module>
+        <module>wms.service.business</module>
+        <module>wms.service.web</module>
+        <module>wms.utils</module>
+        <module>wms.configuration</module>
+        <module>wms.core</module>
+    </modules>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>

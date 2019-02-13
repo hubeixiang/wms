@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sven.wms.db.dao.mapper.TawType2stringMapper">
+    <!-- 测试简单的字典表查询 -->
+    <sql id="condition">
+        <if test="mybatis_catagory_id != null">
+            <!-- 原有的mybatis支持的占位符,处理方式不变 -->
+            and catagory_id in (${mybatis_catagory_id})
+        </if>
+        <if test="catagory_id != null">
+            <!-- 自定义的占位符,正常的拼接方式,前端传入参数都是不加引号.传入参数为:1.拼接为: catagory_id in (1) -->
+            and catagory_id = @n{catagory_id}
+        </if>
+        <if test="catagory_name != null">
+            <!-- 自定义的占位符,添加引号的拼接方式,前端传入参数都是不加引号.传入参数为:a.拼接为: catagory_name in ('a') -->
+            and catagory_name = @s{catagory_name}
+        </if>
+        <if test="type_id != null">
+            <!-- 自定义的占位符,正常的不需要添加引号in操作的拼接方式(现阶段可以使用${ 代替).前端传入参数都是不加引号.传入参数为:1,2,3.拼接为:1,2,3  type_id in (1,2,3) -->
+            and type_id in (@n_m{type_id})
+        </if>
+        <if test="type_name != null">
+            <!-- 自定义的占位符,添加引号的in操作的拼接方式,前端传入参数都是不加引号.前端传入参数为:a,b,c.拼接为: type_id in ('a','b','c') -->
+            and type_name in (@s_m{type_name})
+        </if>
+    </sql>
+
+    <sql id="page">
+        <if test="startIndex != null">
+            <![CDATA[ and row_num > #{startIndex} ]]>
+        </if>
+        <if test="endIndex != null">
+            <![CDATA[ and row_num <= #{endIndex} ]]>
+        </if>
+    </sql>
+
+
+    <!-- 测试字典条件查询数量 -->
+    <select id="selectCountByCondition" parameterType="java.util.Map" resultType="java.lang.Long">
+        select count(*) count from (
+        select *
+        from taw_type2string
+        where 1=1
+        <include refid="condition"></include>
+        order by catagory_id,type_id
+        )
+    </select>
+
+    <!-- 测试字典条件查询详情 -->
+    <select id="selectPageDataByCondition" parameterType="java.util.Map" resultType="com.sven.wms.core.entity.vo.LowerCaseResultMap">
+        select * from
+        (
+        select rownum row_num,p.* from
+        (
+        select *
+        from taw_type2string
+        where 1=1
+        <include refid="condition"></include>
+        order by catagory_id,type_id
+        ) p
+        ) where 1=1
+        <include refid="page"></include>
+    </select>
+</mapper>
