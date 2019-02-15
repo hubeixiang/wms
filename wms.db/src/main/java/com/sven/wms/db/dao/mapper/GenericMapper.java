@@ -2,8 +2,8 @@ package com.sven.wms.db.dao.mapper;
 
 
 
-import com.sven.wms.core.entity.ResultMap;
 import com.sven.wms.core.entity.vo.LowerCaseResultMap;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;

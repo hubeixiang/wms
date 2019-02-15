@@ -29,6 +29,10 @@ public class DataConnectionDefinition {
 		return String.format("%sMapperScannerConfigurer", dbName);
 	}
 
+	public static String getSqlSessionTemplate(String dbName) {
+		return String.format("%sSqlSessionTemplate", dbName);
+	}
+
 	public static String getTemplateMapperFactoryBeanKey(String dbName, String mapperMethodName) {
 		return String.format("%sSqlSessionTemplate%s", dbName, mapperMethodName);
 	}

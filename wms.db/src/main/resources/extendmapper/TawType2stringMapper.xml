@@ -63,4 +63,8 @@
         ) where 1=1
         <include refid="page"></include>
     </select>
+
+    <insert id="insertTawType" parameterType="java.lang.String">
+        ${_parameter}
+    </insert>
 </mapper>

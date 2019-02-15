@@ -2,6 +2,7 @@ package com.sven.wms.db.service;
 
 import com.sven.wms.core.entity.ResultMap;
 import com.sven.wms.core.entity.vo.LowerCaseResultMap;
+import com.sven.wms.db.configure.DBContextHelper;
 import com.sven.wms.db.dao.mapper.GenericMapper;
 import com.sven.wms.db.param.DecorateParam;
 import com.sven.wms.db.param.impl.ColumnMapping;
@@ -60,73 +61,9 @@ public class GenericService {
 		if (StringUtils.isBlank(dataSourceName)) {
 			throw new RuntimeException("getGenericMapper dataSourceName Can't null");
 		}
-//		GenericMapper genericMapper = DBContextHolder.getInstance()
-//				.getMapperInterface(dataSourceName, GenericMapper.class);
-		GenericMapper genericMapper = new GenericMapper() {
-			@Override
-			public List<LowerCaseResultMap> executeSql(String sql) {
-				return null;
-			}
-
-			@Override
-			public int executeInsertSql(String sql) {
-				return 0;
-			}
-
-			@Override
-			public int executeUpdateSql(String sql) {
-				return 0;
-			}
-
-			@Override
-			public int executeDeleteSql(String sql) {
-				return 0;
-			}
-
-			@Override
-			public int selectCountSql(String sql) {
-				return 0;
-			}
-
-			@Override
-			public Object selectOneResult(String sql) {
-				return null;
-			}
-
-			@Override
-			public List<LowerCaseResultMap> executeDynamicSql(Map<String, Object> params) {
-				return null;
-			}
-
-			@Override
-			public int insertDynamicTable(Map<String, Object> params) {
-				return 0;
-			}
-
-			@Override
-			public int executeDynamicSelectInsert(Map<String, Object> params) {
-				return 0;
-			}
-
-			@Override
-			public int updateDynamicTable(Map<String, Object> params) {
-				return 0;
-			}
-
-			@Override
-			public int deleteDynamicTable(Map<String, Object> params) {
-				return 0;
-			}
-
-			@Override
-			public void callProcedure(String procedureName) {
-
-			}
-		};
+		GenericMapper genericMapper = DBContextHelper.getInstance().getMapperInterface(dataSourceName, GenericMapper.class);
 		if (genericMapper == null) {
-			throw new RuntimeException(
-					String.format("getGenericMapper dataSourceName=%s GenericMapper not exists!",
-							dataSourceName));
+			throw new RuntimeException(String.format("getGenericMapper dataSourceName=%s GenericMapper not exists!", dataSourceName));
 		}
 		return genericMapper;
 	}
@@ -267,8 +204,7 @@ public class GenericService {
 		if (genericMapper == null) {
 			throw new RuntimeException("GenericMapper Can't null");
 		} else if (!StringUtils.startsWithIgnoreCase(sql, "SELECT")) {
-			throw new RuntimeException(
-					"selectCountSql only select count statements can be executed");
+			throw new RuntimeException("selectCountSql only select count statements can be executed");
 		}
 		return genericMapper.selectCountSql(sql);
 	}
@@ -290,8 +226,7 @@ public class GenericService {
 		} else if (StringUtils.isBlank(sql)) {
 			throw new RuntimeException("selectCountSql sql Can't null");
 		} else if (!StringUtils.startsWithIgnoreCase(sql, "SELECT")) {
-			throw new RuntimeException(
-					"selectCountSql only select count statements can be executed");
+			throw new RuntimeException("selectCountSql only select count statements can be executed");
 		} else {
 			GenericMapper genericMapper = getGenericMapper(dataSourceName);
 			return selectCountSql(genericMapper, sql);
@@ -302,8 +237,7 @@ public class GenericService {
 		if (genericMapper == null) {
 			throw new RuntimeException("GenericMapper Can't null");
 		} else if (!StringUtils.startsWithIgnoreCase(sql, "SELECT")) {
-			throw new RuntimeException(
-					"selectOneResult only select oneReuslt statements can be executed");
+			throw new RuntimeException("selectOneResult only select oneReuslt statements can be executed");
 		}
 		return genericMapper.selectOneResult(sql);
 	}
@@ -325,17 +259,15 @@ public class GenericService {
 		} else if (StringUtils.isBlank(sql)) {
 			throw new RuntimeException("selectOneResult sql Can't null");
 		} else if (!StringUtils.startsWithIgnoreCase(sql, "SELECT")) {
-			throw new RuntimeException(
-					"selectOneResult only select oneReuslt statements can be executed");
+			throw new RuntimeException("selectOneResult only select oneReuslt statements can be executed");
 		} else {
 			GenericMapper genericMapper = getGenericMapper(dataSourceName);
 			return selectOneResult(genericMapper, sql);
 		}
 	}
 
-	public void insertDynamicTableBatch(String dataSourceNameA, String dataSourceNameB,
-			final String tableName, final List<DecorateParam> paramMapListA,
-			final List<DecorateParam> paramMapListB) {
+	public void insertDynamicTableBatch(String dataSourceNameA, String dataSourceNameB, final String tableName,
+			final List<DecorateParam> paramMapListA, final List<DecorateParam> paramMapListB) {
 		if (StringUtils.isNotEmpty(dataSourceNameA)) {
 			insertDynamicTableBatch(dataSourceNameA, tableName, paramMapListA);
 		}
@@ -344,44 +276,37 @@ public class GenericService {
 		}
 	}
 
-	public int executeDynamicSelectInsertBatch(String dataSourceName, final String targetTableName,
-			final String sourceTableName, final List<DecorateParam> paramMapList) {
+	public int executeDynamicSelectInsertBatch(String dataSourceName, final String targetTableName, final String sourceTableName,
+			final List<DecorateParam> paramMapList) {
 		if (StringUtils.isBlank(dataSourceName)) {
 			throw new RuntimeException("dataSourceName Can't null");
 		} else if (StringUtils.isBlank(targetTableName)) {
-			throw new RuntimeException(
-					"executeDynamicSelectInsertBatch targetTableName Can't null");
+			throw new RuntimeException("executeDynamicSelectInsertBatch targetTableName Can't null");
 		} else if (StringUtils.isBlank(sourceTableName)) {
-			throw new RuntimeException(
-					"executeDynamicSelectInsertBatch sourceTableName Can't null");
+			throw new RuntimeException("executeDynamicSelectInsertBatch sourceTableName Can't null");
 		} else if (paramMapList == null) {
 			throw new RuntimeException("executeDynamicSelectInsertBatch paramMapList Can't null");
 		}
 		GenericMapper genericMapper = getGenericMapper(dataSourceName);
 
-		return executeDynamicSelectInsertBatch(genericMapper, targetTableName, sourceTableName,
-				paramMapList);
+		return executeDynamicSelectInsertBatch(genericMapper, targetTableName, sourceTableName, paramMapList);
 	}
 
-	public int executeDynamicSelectInsertBatch(GenericMapper genericMapper,
-			final String targetTableName, final String sourceTableName,
+	public int executeDynamicSelectInsertBatch(GenericMapper genericMapper, final String targetTableName, final String sourceTableName,
 			final List<DecorateParam> paramMapList) {
 		if (genericMapper == null) {
 			throw new RuntimeException("GenericMapper Can't null");
 		} else if (StringUtils.isBlank(targetTableName)) {
-			throw new RuntimeException(
-					"executeDynamicSelectInsertBatch  targetTableName Can't null");
+			throw new RuntimeException("executeDynamicSelectInsertBatch  targetTableName Can't null");
 		} else if (StringUtils.isBlank(sourceTableName)) {
-			throw new RuntimeException(
-					"executeDynamicSelectInsertBatch sourceTableName Can't null");
+			throw new RuntimeException("executeDynamicSelectInsertBatch sourceTableName Can't null");
 		} else if (paramMapList == null) {
 			throw new RuntimeException("executeDynamicSelectInsertBatch paramMapList Can't null");
 		}
 		return selectInsert(genericMapper, targetTableName, sourceTableName, paramMapList);
 	}
 
-	public void insertDynamicTableBatch(String dataSourceName, final String tableName,
-			final List<DecorateParam> paramMapList) {
+	public void insertDynamicTableBatch(String dataSourceName, final String tableName, final List<DecorateParam> paramMapList) {
 		if (StringUtils.isBlank(dataSourceName)) {
 			throw new RuntimeException("dataSourceName Can't null");
 		} else if (StringUtils.isBlank(tableName)) {
@@ -394,8 +319,7 @@ public class GenericService {
 		insertDynamicTableBatch(genericMapper, tableName, paramMapList);
 	}
 
-	public void insertDynamicTableBatch(GenericMapper genericMapper, final String tableName,
-			final List<DecorateParam> paramMapList) {
+	public void insertDynamicTableBatch(GenericMapper genericMapper, final String tableName, final List<DecorateParam> paramMapList) {
 		if (genericMapper == null) {
 			throw new RuntimeException("GenericMapper Can't null");
 		} else if (StringUtils.isBlank(tableName)) {
@@ -406,8 +330,7 @@ public class GenericService {
 		insert(genericMapper, tableName, paramMapList);
 	}
 
-	public void updateDynamicTableBatch(String dataSourceName, final String tableName,
-			final List<DecorateParam> paramMapList) {
+	public void updateDynamicTableBatch(String dataSourceName, final String tableName, final List<DecorateParam> paramMapList) {
 		if (StringUtils.isBlank(dataSourceName)) {
 			throw new RuntimeException("dataSourceName Can't null");
 		} else if (StringUtils.isBlank(tableName)) {
@@ -420,8 +343,7 @@ public class GenericService {
 		updateDynamicTableBatch(genericMapper, tableName, paramMapList);
 	}
 
-	public void updateDynamicTableBatch(GenericMapper genericMapper, final String tableName,
-			final List<DecorateParam> paramMapList) {
+	public void updateDynamicTableBatch(GenericMapper genericMapper, final String tableName, final List<DecorateParam> paramMapList) {
 		if (genericMapper == null) {
 			throw new RuntimeException("GenericMapper Can't null");
 		} else if (StringUtils.isBlank(tableName)) {
@@ -432,8 +354,7 @@ public class GenericService {
 		update(genericMapper, tableName, paramMapList);
 	}
 
-	public void deleteDynamicTableBatch(String dataSourceName, final String tableName,
-			final List<DecorateParam> paramMapList) {
+	public void deleteDynamicTableBatch(String dataSourceName, final String tableName, final List<DecorateParam> paramMapList) {
 		if (StringUtils.isBlank(dataSourceName)) {
 			throw new RuntimeException("dataSourceName Can't null");
 		} else if (StringUtils.isBlank(tableName)) {
@@ -446,8 +367,7 @@ public class GenericService {
 		deleteDynamicTableBatch(genericMapper, tableName, paramMapList);
 	}
 
-	public void deleteDynamicTableBatch(GenericMapper genericMapper, final String tableName,
-			final List<DecorateParam> paramMapList) {
+	public void deleteDynamicTableBatch(GenericMapper genericMapper, final String tableName, final List<DecorateParam> paramMapList) {
 		if (genericMapper == null) {
 			throw new RuntimeException("GenericMapper Can't null");
 		} else if (StringUtils.isBlank(tableName)) {
@@ -459,8 +379,8 @@ public class GenericService {
 		delete(genericMapper, tableName, paramMapList);
 	}
 
-	private int selectInsert(GenericMapper genericMapper, final String targetTableName,
-			final String sourceTableName, final List<DecorateParam> paramMapList) {
+	private int selectInsert(GenericMapper genericMapper, final String targetTableName, final String sourceTableName,
+			final List<DecorateParam> paramMapList) {
 
 		int total = 0;
 		for (DecorateParam param : paramMapList) {
@@ -472,8 +392,7 @@ public class GenericService {
 			ArrayList<Map> list = new ArrayList<>();
 			//分析字段要备份的字段
 			for (ColumnMapping columnMapping : paramSelectInsert.getBackupColumns()) {
-				list.add(parserValue(columnMapping.getTargetColumn(),
-						columnMapping.formatSourceColumn()));
+				list.add(parserValue(columnMapping.getTargetColumn(), columnMapping.formatSourceColumn()));
 			}
 
 			var10.put("targetTableName", targetTableName);
@@ -493,8 +412,7 @@ public class GenericService {
 		return total;
 	}
 
-	private void insert(GenericMapper genericMapper, final String tableName,
-			final List<DecorateParam> paramMapList) {
+	private void insert(GenericMapper genericMapper, final String tableName, final List<DecorateParam> paramMapList) {
 		for (DecorateParam param : paramMapList) {
 			if (param == null || !param.isUsable()) {
 				continue;
@@ -514,8 +432,7 @@ public class GenericService {
 		}
 	}
 
-	private void update(GenericMapper genericMapper, final String tableName,
-			final List<DecorateParam> paramMapList) {
+	private void update(GenericMapper genericMapper, final String tableName, final List<DecorateParam> paramMapList) {
 		for (DecorateParam param : paramMapList) {
 			if (param == null || !param.isUsable()) {
 				continue;
@@ -539,8 +456,7 @@ public class GenericService {
 		}
 	}
 
-	private void delete(GenericMapper genericMapper, String tableName,
-			List<DecorateParam> paramMapList) {
+	private void delete(GenericMapper genericMapper, String tableName, List<DecorateParam> paramMapList) {
 		for (DecorateParam param : paramMapList) {
 			if (param == null || !param.isUsable()) {
 				continue;
@@ -576,8 +492,7 @@ public class GenericService {
 			value = "";
 		}
 
-		if (value instanceof String && ((String) value)
-				.startsWith(DecorateConstans.SQLVALUE_CONSTANS)) {
+		if (value instanceof String && ((String) value).startsWith(DecorateConstans.SQLVALUE_CONSTANS)) {
 			map.put("sqlValue", ((String) value).substring(4));
 		} else {
 			map.put("value", formatValue(value));
@@ -592,10 +507,8 @@ public class GenericService {
 			value = "";
 		}
 
-		if (value instanceof String && ((String) value)
-				.startsWith(DecorateConstans.SQLVALUE_CONSTANS)) {
-			map.put("sqlValue",
-					((String) value).substring(DecorateConstans.SQLVALUE_CONSTANS_LENGTH));
+		if (value instanceof String && ((String) value).startsWith(DecorateConstans.SQLVALUE_CONSTANS)) {
+			map.put("sqlValue", ((String) value).substring(DecorateConstans.SQLVALUE_CONSTANS_LENGTH));
 		} else if (value instanceof List) {
 			map.put("listValue", value);
 		} else {
@@ -677,9 +590,7 @@ public class GenericService {
 				value = new String(c);
 				inStream.close();
 			} catch (Exception e) {
-				logger.error(
-						"getColumnValue, dataType = java.sql.Clob get Exception.fieldName=" + column
-								+ ",soruceValue=" + columnValue);
+				logger.error("getColumnValue, dataType = java.sql.Clob get Exception.fieldName=" + column + ",soruceValue=" + columnValue);
 			} finally {
 				try {
 					if (inStream != null)

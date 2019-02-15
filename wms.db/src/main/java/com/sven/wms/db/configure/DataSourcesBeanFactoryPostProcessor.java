@@ -2,7 +2,9 @@ package com.sven.wms.db.configure;
 
 import com.alibaba.druid.pool.DruidDataSource;
 import com.sven.wms.configuration.configuration.DataSourceProperties;
+import com.sven.wms.db.dao.MybatisBeanNameGenerator;
 import org.mybatis.spring.SqlSessionFactoryBean;
+import org.mybatis.spring.SqlSessionTemplate;
 import org.mybatis.spring.mapper.MapperScannerConfigurer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,7 +37,7 @@ public class DataSourcesBeanFactoryPostProcessor implements BeanDefinitionRegist
 
 	@Override
 	public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
-//		System.out.println("调用DataSourcesBeanFactoryPostProcessor的postProcessBeanFactory");
+		//		System.out.println("调用DataSourcesBeanFactoryPostProcessor的postProcessBeanFactory");
 		/**
 		 BeanDefinition bd = beanFactory.getBeanDefinition("dataSourceProperties");
 		 System.out.println("属性值============" + bd.getPropertyValues().toString());
@@ -49,7 +51,7 @@ public class DataSourcesBeanFactoryPostProcessor implements BeanDefinitionRegist
 
 	@Override
 	public void postProcessBeanDefinitionRegistry(BeanDefinitionRegistry registry) throws BeansException {
-//		System.out.println("调用DataSourcesBeanFactoryPostProcessor的postProcessBeanDefinitionRegistry");
+		//		System.out.println("调用DataSourcesBeanFactoryPostProcessor的postProcessBeanDefinitionRegistry");
 		this.registry = registry;
 
 		if (dataSourceProperties != null) {
@@ -72,15 +74,27 @@ public class DataSourcesBeanFactoryPostProcessor implements BeanDefinitionRegist
 				if (config.getMybatis().getScanner().isValid()) {
 					createMapperScannerConfigurerBean(dbName, config.getMybatis());
 				}
+				createSqlSessionTemplate(dbName);
 			}
 		}
 	}
 
+	/**
+	 * private void createDataSourceBean(String dbName, DataSourceProperties.DataSourceConfig config, boolean primary) {
+	 * final BeanDefinitionBuilder builder = BeanDefinitionBuilder.genericBeanDefinition(DruidDataSource.class);
+	 * builder.addPropertyValue("url", config.getUrl());
+	 * builder.addPropertyValue("username", config.getUsername());
+	 * builder.addPropertyValue("password", config.getPassword());
+	 * <p>
+	 * final BeanDefinition definition = builder.getBeanDefinition();
+	 * definition.setPrimary(primary);
+	 * registry.registerBeanDefinition(DataConnectionDefinition.getDataSourceBeanName(dbName), definition);
+	 * }
+	 **/
+
 	private void createDataSourceBean(String dbName, DataSourceProperties.DataSourceConfig config, boolean primary) {
-		final BeanDefinitionBuilder builder = BeanDefinitionBuilder.genericBeanDefinition(DruidDataSource.class);
-		builder.addPropertyValue("url", config.getUrl());
-		builder.addPropertyValue("username", config.getUsername());
-		builder.addPropertyValue("password", config.getPassword());
+		final BeanDefinitionBuilder builder = BeanDefinitionBuilder.genericBeanDefinition(AtomikosNonXADataSourceFactoryBean.class);
+		builder.addPropertyValue("dataSourceConfig", config);
 
 		final BeanDefinition definition = builder.getBeanDefinition();
 		definition.setPrimary(primary);
@@ -100,8 +114,15 @@ public class DataSourcesBeanFactoryPostProcessor implements BeanDefinitionRegist
 		final BeanDefinitionBuilder builder = BeanDefinitionBuilder.genericBeanDefinition(MapperScannerConfigurer.class);
 		builder.addPropertyValue("sqlSessionFactoryBeanName", DataConnectionDefinition.getSqlSessionFactoryBeanName(dbName));
 		builder.addPropertyValue("basePackage", config.getScanner().getBasePackage());
+		builder.addPropertyValue("nameGenerator", new MybatisBeanNameGenerator(false, dbName));
 
-		registry.registerBeanDefinition(DataConnectionDefinition.getMapperScannerConfigurerBeanName(dbName),
-				builder.getBeanDefinition());
+		registry.registerBeanDefinition(DataConnectionDefinition.getMapperScannerConfigurerBeanName(dbName), builder.getBeanDefinition());
+	}
+
+	private void createSqlSessionTemplate(String dbName) {
+		final BeanDefinitionBuilder builder = BeanDefinitionBuilder.genericBeanDefinition(SqlSessionTemplate.class);
+		builder.addConstructorArgReference(DataConnectionDefinition.getSqlSessionFactoryBeanName(dbName));
+
+		registry.registerBeanDefinition(DataConnectionDefinition.getSqlSessionTemplate(dbName), builder.getBeanDefinition());
 	}
 }
