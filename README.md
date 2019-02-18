@@ -13,6 +13,10 @@ maven的host地址配置为wmsmvnhost
 ## 部署后测试地址
 http://发布的host:8808/wms/nav/init
 
+## 开发分支说明
+develop 分支是开发合并分支，所有自有的分支需要先合并到develop中，合并正常后,最后有管理员合并到master主分支中。
+禁止直接向master分支中提交代码
+
 ## 工程介绍
 * wms.parent
   系统所有的module的父module
