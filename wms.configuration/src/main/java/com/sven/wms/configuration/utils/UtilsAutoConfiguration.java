@@ -6,6 +6,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 
+/**
+ * @author sven
+ * @date 2019/2/15 14:43
+ */
 @Configuration
 public class UtilsAutoConfiguration {
 

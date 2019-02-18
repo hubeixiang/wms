@@ -1,5 +1,9 @@
 package com.sven.wms.db.param.impl;
 
+/**
+ * @author sven
+ * @date 2019/2/15 14:43
+ */
 public class DecorateConstans {
     public final static String UPDATE_PK = "UPDATE_PK";
     public final static String DELETE_PK = "DELETE_PK";

@@ -7,6 +7,10 @@ import org.apache.ibatis.scripting.xmltags.OgnlCache;
 
 import java.util.List;
 
+/**
+ * @author sven
+ * @date 2019/2/15 14:43
+ */
 public class StringMultipleBindingTokenParser extends StringBindingTokenParser {
     public static GenericTokenParser createParser(TokenHandler handler) {
         return new GenericTokenParser("@s_m{", "}", handler);

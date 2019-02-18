@@ -5,6 +5,10 @@ import com.sven.wms.db.param.DecorateParam;
 import java.io.Serializable;
 import java.util.List;
 
+/**
+ * @author sven
+ * @date 2019/2/15 14:43
+ */
 public class DecorateParamSelectInsert implements DecorateParam, Serializable {
     private static final long serialVersionUID = 1L;
     //查询的主键变量

@@ -6,6 +6,10 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * @author sven
+ * @date 2019/2/15 14:43
+ */
 @ConfigurationProperties
 public class DataSourceProperties {
 
@@ -18,6 +22,8 @@ public class DataSourceProperties {
 	public static class DataSourceConfig {
 
 		private String host;
+		private String dbname;
+		private String driver;
 		private String url;
 		private String username;
 		private String password;
@@ -32,6 +38,22 @@ public class DataSourceProperties {
 
 		public void setHost(String host) {
 			this.host = host;
+		}
+
+		public String getDbname() {
+			return dbname;
+		}
+
+		public void setDbname(String dbname) {
+			this.dbname = dbname;
+		}
+
+		public String getDriver() {
+			return driver;
+		}
+
+		public void setDriver(String driver) {
+			this.driver = driver;
 		}
 
 		public String getUrl() {
@@ -104,8 +126,7 @@ public class DataSourceProperties {
 			}
 
 			public boolean isValid() {
-				return StringUtils.isNoneBlank(this.configLocation) && StringUtils
-						.isNoneBlank(this.mapperLocations);
+				return StringUtils.isNoneBlank(this.configLocation) && StringUtils.isNoneBlank(this.mapperLocations);
 			}
 		}
 

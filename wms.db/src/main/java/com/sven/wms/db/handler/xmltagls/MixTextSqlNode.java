@@ -11,6 +11,10 @@ import org.apache.ibatis.parsing.TokenHandler;
 import org.apache.ibatis.scripting.xmltags.DynamicContext;
 import org.apache.ibatis.scripting.xmltags.SqlNode;
 
+/**
+ * @author sven
+ * @date 2019/2/15 14:43
+ */
 public class MixTextSqlNode implements SqlNode {
     private String text;
     private boolean isMybatisParser = false;

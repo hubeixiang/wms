@@ -4,6 +4,10 @@ import com.sven.wms.db.param.DecorateParam;
 
 import java.io.Serializable;
 
+/**
+ * @author sven
+ * @date 2019/2/15 14:43
+ */
 public class DecorateParamSql implements DecorateParam, Serializable {
     private static final long serialVersionUID = 1L;
     //要静态执行的sql
