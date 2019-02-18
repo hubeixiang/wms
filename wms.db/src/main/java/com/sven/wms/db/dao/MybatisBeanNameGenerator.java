@@ -16,23 +16,15 @@
 
 package com.sven.wms.db.dao;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.BeanDefinitionStoreException;
 import org.springframework.beans.factory.config.BeanDefinition;
-import org.springframework.beans.factory.support.BeanDefinitionReaderUtils;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
-import org.springframework.beans.factory.support.BeanNameGenerator;
 import org.springframework.beans.factory.support.DefaultBeanNameGenerator;
 import org.springframework.util.ClassUtils;
 
-import java.beans.Introspector;
-
 /**
- * Default implementation of the {@link BeanNameGenerator} interface, delegating to
- * {@link BeanDefinitionReaderUtils#generateBeanName(BeanDefinition, BeanDefinitionRegistry)}.
- *
- * @author Juergen Hoeller
- * @since 2.0.3
+ * @author sven
+ * @date 2019/2/15 14:43
  */
 public class MybatisBeanNameGenerator extends DefaultBeanNameGenerator {
 	private boolean isDefaultDataSource;

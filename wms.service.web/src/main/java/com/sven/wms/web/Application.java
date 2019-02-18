@@ -14,6 +14,10 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import java.util.Properties;
 
+/**
+ * @author sven
+ * @date 2019/2/15 14:43
+ */
 @EnableTransactionManagement
 @EnableConfigurationProperties({ DataSourceProperties.class })
 @SpringBootApplication

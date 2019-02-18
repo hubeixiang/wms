@@ -6,6 +6,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.ClassUtils;
 
+/**
+ * @author sven
+ * @date 2019/2/15 14:43
+ */
 public class DBContextHelper {
 	private static Logger logger = LoggerFactory.getLogger(DBContextHelper.class);
 	private static DBContextHelper dbContextHelper;

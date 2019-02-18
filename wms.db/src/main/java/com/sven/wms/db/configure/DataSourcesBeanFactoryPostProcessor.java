@@ -1,6 +1,5 @@
 package com.sven.wms.db.configure;
 
-import com.alibaba.druid.pool.DruidDataSource;
 import com.sven.wms.configuration.configuration.DataSourceProperties;
 import com.sven.wms.db.dao.MybatisBeanNameGenerator;
 import org.mybatis.spring.SqlSessionFactoryBean;
@@ -17,6 +16,10 @@ import org.springframework.beans.factory.support.BeanDefinitionRegistryPostProce
 import org.springframework.boot.bind.PropertiesConfigurationFactory;
 import org.springframework.core.env.ConfigurableEnvironment;
 
+/**
+ * @author sven
+ * @date 2019/2/15 14:43
+ */
 public class DataSourcesBeanFactoryPostProcessor implements BeanDefinitionRegistryPostProcessor {
 
 	private static final Logger logger = LoggerFactory.getLogger(DataSourcesBeanFactoryPostProcessor.class);

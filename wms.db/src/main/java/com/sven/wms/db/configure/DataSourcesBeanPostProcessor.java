@@ -9,6 +9,10 @@ import org.springframework.beans.factory.config.BeanPostProcessor;
 import java.util.ArrayList;
 import java.util.Collection;
 
+/**
+ * @author sven
+ * @date 2019/2/15 14:43
+ */
 public class DataSourcesBeanPostProcessor implements BeanPostProcessor {
 	@Override
 	public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {

@@ -5,6 +5,10 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Properties;
 
+/**
+ * @author sven
+ * @date 2019/2/15 14:43
+ */
 public class ConnectionPoolConfig {
 	private static final Logger logger = LoggerFactory.getLogger(ConnectionPoolConfig.class);
 

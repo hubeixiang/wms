@@ -3,7 +3,8 @@ package com.sven.wms.core.entity.vo;
 import java.util.HashMap;
 
 /**
- * Created by FalconIA on 2016-11-30.
+ * @author sven
+ * @date 2019/2/15 14:43
  */
 public class LowerCaseResultMap<V> extends HashMap<String, V> {
 

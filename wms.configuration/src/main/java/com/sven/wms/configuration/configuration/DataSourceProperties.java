@@ -6,6 +6,10 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * @author sven
+ * @date 2019/2/15 14:43
+ */
 @ConfigurationProperties
 public class DataSourceProperties {
 

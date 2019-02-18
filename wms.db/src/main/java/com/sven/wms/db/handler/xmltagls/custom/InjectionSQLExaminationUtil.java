@@ -2,6 +2,10 @@ package com.sven.wms.db.handler.xmltagls.custom;
 
 import org.apache.commons.lang3.StringUtils;
 
+/**
+ * @author sven
+ * @date 2019/2/15 14:43
+ */
 public class InjectionSQLExaminationUtil {
     public static void examination(String sqlvalue) {
         if (StringUtils.isEmpty(sqlvalue)) {

@@ -22,6 +22,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 现阶段侧测试controller
+ *
+ * @author sven
+ * @date 2019/2/15 14:43
+ */
 @RequestMapping("nav")
 @Controller
 public class NavController {

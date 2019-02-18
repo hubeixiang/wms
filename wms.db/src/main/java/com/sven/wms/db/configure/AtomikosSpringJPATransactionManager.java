@@ -11,6 +11,10 @@ import org.springframework.transaction.jta.JtaTransactionManager;
 
 import javax.transaction.SystemException;
 
+/**
+ * @author sven
+ * @date 2019/2/15 14:43
+ */
 @Configuration
 @ConditionalOnClass({ UserTransactionManager.class, UserTransactionImp.class, JtaTransactionManager.class })
 public class AtomikosSpringJPATransactionManager {

@@ -6,6 +6,10 @@ import org.apache.ibatis.scripting.xmltags.DynamicContext;
 import org.apache.ibatis.scripting.xmltags.OgnlCache;
 import org.apache.ibatis.type.SimpleTypeRegistry;
 
+/**
+ * @author sven
+ * @date 2019/2/15 14:43
+ */
 public class MybatisBindingTokenParser implements TokenHandler {
     public static GenericTokenParser createParser(TokenHandler handler) {
         return new GenericTokenParser("${", "}", handler);

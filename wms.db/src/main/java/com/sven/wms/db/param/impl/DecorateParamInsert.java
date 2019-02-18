@@ -7,6 +7,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @author sven
+ * @date 2019/2/15 14:43
+ */
 public class DecorateParamInsert implements DecorateParam, Serializable {
     private static final long serialVersionUID = 1L;
 

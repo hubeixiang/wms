@@ -2,6 +2,10 @@ package com.sven.wms.db.param.impl;
 
 import java.io.Serializable;
 
+/**
+ * @author sven
+ * @date 2019/2/15 14:43
+ */
 public class VarableBind<E> implements Serializable {
     private static final long serialVersionUID = 1L;
     private String column;

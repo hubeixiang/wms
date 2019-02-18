@@ -8,6 +8,10 @@ import org.apache.ibatis.type.SimpleTypeRegistry;
 
 import java.util.List;
 
+/**
+ * @author sven
+ * @date 2019/2/15 14:43
+ */
 public class NumberBindingTokenParser implements TokenHandler {
     public static GenericTokenParser createParser(TokenHandler handler) {
         return new GenericTokenParser("@n{", "}", handler);

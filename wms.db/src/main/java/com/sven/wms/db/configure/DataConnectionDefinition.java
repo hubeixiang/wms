@@ -5,6 +5,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.ConfigurableEnvironment;
 
+/**
+ * @author sven
+ * @date 2019/2/15 14:43
+ */
 @Configuration
 public class DataConnectionDefinition {
 
