@@ -11,7 +11,8 @@
 maven的host地址配置为wmsmvnhost
 
 ## 部署后测试地址
-http://发布的host:8808/wms/nav/init
+* http://发布的host:8808/wms/nav/init
+* http://127.0.0.1:8808/wms/swagger-ui.html  使用swagger管理的rest api访问地址
 
 ## 开发分支说明
 develop 分支是开发合并分支，所有自有的分支需要先合并到develop中，合并正常后,最后有管理员合并到master主分支中。

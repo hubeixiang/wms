@@ -31,6 +31,8 @@
         <!-- spring & spring boot -->
         <sven-wms.version>${project.version}</sven-wms.version>
         <spring-boot.version>1.5.3.RELEASE</spring-boot.version>
+        <!-- spring swagger -->
+        <spring-swagger.version>2.4.0</spring-swagger.version>
         <!-- database jdbc driver -->
         <ojdbc6.version>11.2.0.4.0</ojdbc6.version>
         <mysql-connector.version>5.1.34</mysql-connector.version>
@@ -177,6 +179,18 @@
                 <artifactId>spring-boot</artifactId>
                 <version>${spring-boot.version}</version>
                 <optional>true</optional>
+            </dependency>
+
+            <!-- swagger -->
+            <dependency>
+                <groupId>io.springfox</groupId>
+                <artifactId>springfox-swagger-ui</artifactId>
+                <version>${spring-swagger.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.springfox</groupId>
+                <artifactId>springfox-swagger2</artifactId>
+                <version>${spring-swagger.version}</version>
             </dependency>
 
 
