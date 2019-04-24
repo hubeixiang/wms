@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import java.util.Properties;
 
@@ -18,6 +19,7 @@ import java.util.Properties;
  * @author sven
  * @date 2019/2/15 14:43
  */
+@EnableSwagger2
 @EnableTransactionManagement
 @EnableConfigurationProperties({ DataSourceProperties.class })
 @SpringBootApplication
