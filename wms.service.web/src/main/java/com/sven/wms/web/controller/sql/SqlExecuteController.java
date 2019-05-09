@@ -1,6 +1,7 @@
 package com.sven.wms.web.controller.sql;
 
 import com.sven.wms.business.transaction.TransactionBusiness;
+import com.sven.wms.configuration.configuration.DataSourceProperties;
 import com.sven.wms.core.entity.vo.LowerCaseResultMap;
 import com.sven.wms.db.configure.DBContextHelper;
 import com.sven.wms.db.dao.mapper.GenericMapper;
@@ -23,7 +24,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author sven
@@ -37,6 +42,37 @@ public class SqlExecuteController extends BaseController {
 
 	@Autowired
 	private TransactionBusiness transactionBusiness;
+
+	@Autowired
+	private DataSourceProperties dataSourceProperties;
+
+	@ResponseBody
+	@ApiOperation(value = "查询加载数据库以及数据对应的sqlid", notes = "查询加载数据库以及数据对应的sqlid")
+	@RequestMapping(produces = WebConstans.WEB_PRODUCES, method = RequestMethod.POST, value = "/select/sqlinfo")
+	public ServiceResult selectSqlInfo() {
+		String method = "selectSqlInfo";
+		logger.info(String.format("%s startting ...", method));
+		Map<String, List<String>> resultListMap = new HashMap<>();
+		for (Map.Entry<String, DataSourceProperties.DataSourceConfig> entry : dataSourceProperties.getDb().entrySet()) {
+			String db = entry.getKey();
+			SqlSessionTemplate sqlSessionTemplate = DBContextHelper.getInstance().getSqlSessionTemplate(db);
+			List<String> sqlStatement = new ArrayList<>();
+			Collection<String> all = sqlSessionTemplate.getConfiguration().getMappedStatementNames();
+			if (all != null) {
+				for (String sqlId : all) {
+					if (sqlId.indexOf('.') != -1) {
+						sqlStatement.add(sqlId);
+					}
+				}
+			}
+			resultListMap.put(db, sqlStatement);
+		}
+		ServiceResult result = new ServiceResult();
+		result.setCode(0);
+		result.setData(resultListMap);
+		logger.info(String.format("%s end", method));
+		return result;
+	}
 
 	@ResponseBody
 	@ApiOperation(value = "查询指定的SqlId", notes = "执行指定的查询SqlId,并返回结果")
@@ -53,6 +89,25 @@ public class SqlExecuteController extends BaseController {
 		ServiceResult result = new ServiceResult();
 		result.setCode(0);
 		result.setData(resultListMap);
+		logger.info(String.format("%s end", method));
+		return result;
+	}
+
+	@ResponseBody
+	@ApiOperation(value = "执行指定的SqlId", notes = "执行指定的非查询SqlId,并返回结果")
+	@RequestMapping(produces = WebConstans.WEB_PRODUCES, method = RequestMethod.POST, value = "/update/{db}/{sqlId}")
+	public ServiceResult updateSpecSqlId(
+			@ApiParam(required = true, name = "paramter", value = "sqlId执行需要的参数") @RequestBody SelectServiceParamter paramter,
+			@ApiParam(required = true, name = "db", value = "sqlId执行的数据库") @PathVariable("db") String db,
+			@ApiParam(required = true, name = "sqlId", value = "要执行的sql的,sqlId") @PathVariable("sqlId") String sqlId) {
+		String method = "updateSpecSqlId";
+		logger.info(String.format("%s startting ...", method));
+		Object param = paramter.getQueryParam() == null ? null : paramter.getQueryParam().getParam();
+		SqlSessionTemplate sqlSessionTemplate = DBContextHelper.getInstance().getSqlSessionTemplate(db);
+		int resultInt = sqlSessionTemplate.update(sqlId, param);
+		ServiceResult result = new ServiceResult();
+		result.setCode(0);
+		result.setData(resultInt);
 		logger.info(String.format("%s end", method));
 		return result;
 	}
