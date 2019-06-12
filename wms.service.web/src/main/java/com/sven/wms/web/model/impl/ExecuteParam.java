@@ -1,26 +1,24 @@
-package com.sven.wms.web.model;
+package com.sven.wms.web.model.impl;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.sven.wms.web.model.impl.SelectParam;
 
 import java.io.Serializable;
+import java.util.Map;
 
 /**
  * @author sven
- * @date 2019/3/8 14:48
+ * @date 2019/5/17 10:21
  */
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY, isGetterVisibility = JsonAutoDetect.Visibility.NONE, getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE)
-public class SelectServiceParamter implements ServiceParamter<SelectParam>, Serializable {
+public class ExecuteParam implements Serializable {
 	private static final long serialVersionUID = 1L;
-	private SelectParam data;
+	private Map<String, Object> sqlParam;
 
-	@Override
-	public SelectParam getQueryParam() {
-		return data;
+	public Map<String, Object> getSqlParam() {
+		return sqlParam;
 	}
 
-	@Override
-	public void setQueryParam(SelectParam queryParam) {
-		this.data = queryParam;
+	public void setSqlParam(Map<String, Object> sqlParam) {
+		this.sqlParam = sqlParam;
 	}
 }
