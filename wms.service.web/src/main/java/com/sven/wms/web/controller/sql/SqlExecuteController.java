@@ -5,6 +5,7 @@ import com.sven.wms.configuration.configuration.DataSourceProperties;
 import com.sven.wms.core.entity.vo.LowerCaseResultMap;
 import com.sven.wms.db.configure.DBContextHelper;
 import com.sven.wms.db.dao.mapper.GenericMapper;
+import com.sven.wms.utils.JsonUtils;
 import com.sven.wms.web.controller.BaseController;
 import com.sven.wms.web.model.CommonServiceResult;
 import com.sven.wms.web.model.impl.EffectResult;
@@ -85,8 +86,8 @@ public class SqlExecuteController extends BaseController {
 			@ApiParam(required = true, name = "db", value = "sqlId执行的数据库") @PathVariable("db") String db,
 			@ApiParam(required = true, name = "sqlId", value = "要执行的sql的,sqlId") @PathVariable("sqlId") String sqlId) {
 		String method = "selectSpecSqlId";
-		logger.info(String.format("%s startting ...", method));
 		Object param = paramter.getSqlParam();
+		logger.info(String.format("%s startting ...,param=%s", method, param == null ? null : JsonUtils.toJson(param)));
 		CommonServiceResult result = new CommonServiceResult();
 		SqlSessionTemplate sqlSessionTemplate = DBContextHelper.getInstance().getSqlSessionTemplate(db);
 		if (sqlSessionTemplate == null) {
@@ -115,8 +116,8 @@ public class SqlExecuteController extends BaseController {
 			@ApiParam(required = true, name = "db", value = "sqlId执行的数据库") @PathVariable("db") String db,
 			@ApiParam(required = true, name = "sqlId", value = "要执行的sql的,sqlId") @PathVariable("sqlId") String sqlId) {
 		String method = "updateSpecSqlId";
-		logger.info(String.format("%s startting ...", method));
 		Object param = paramter.getSqlParam();
+		logger.info(String.format("%s startting ...,param=%s", method, param == null ? null : JsonUtils.toJson(param)));
 		SqlSessionTemplate sqlSessionTemplate = DBContextHelper.getInstance().getSqlSessionTemplate(db);
 		CommonServiceResult result = new CommonServiceResult();
 		if (sqlSessionTemplate == null) {
@@ -147,7 +148,7 @@ public class SqlExecuteController extends BaseController {
 			@ApiParam(required = true, name = "operation", value = "SQL的操作方式,枚举(delete/insert/update/select)") @PathVariable("operation") String operation,
 			@ApiParam(required = true, name = "db", value = "sqlId执行的数据库") @PathVariable("db") String db) {
 		String method = "selectSpecSqlId";
-		logger.info(String.format("%s startting ...", method));
+		logger.info(String.format("%s startting ...paramter=%s", method, paramter));
 		CommonServiceResult result = new CommonServiceResult();
 		if (StringUtils.isEmpty(paramter)) {
 			result.setDealResult(false);
