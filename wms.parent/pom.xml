@@ -41,7 +41,7 @@
         <mybatis-spring.version>1.2.2</mybatis-spring.version>
         <!-- dubbo & zookeeper -->
         <dubbo.version>2.8.4.20151031</dubbo.version>
-        <zookeeper.version>3.4.6</zookeeper.version>
+        <zookeeper.version>3.4.14</zookeeper.version>
         <apache-curator.version>2.5.0</apache-curator.version>
         <!-- json & json serialize  -->
         <fastjson.version>1.2.31</fastjson.version>
