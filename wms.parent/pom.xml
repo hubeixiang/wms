@@ -30,7 +30,7 @@
         <slf4j.logging.version>1.7.21</slf4j.logging.version>
         <!-- spring & spring boot -->
         <sven-wms.version>${project.version}</sven-wms.version>
-        <spring-boot.version>1.5.10.RELEASE</spring-boot.version>
+        <spring-boot.version>2.2.0.RELEASE</spring-boot.version>
         <!-- spring swagger -->
         <spring-swagger.version>2.4.0</spring-swagger.version>
         <!-- database jdbc driver -->
@@ -223,33 +223,18 @@
 
             <!-- transaction & atomikos -->
             <dependency>
+                <groupId>com.atomikos</groupId>
+                <artifactId>transactions-jdbc</artifactId>
+                <version>${atomikos.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>javax.transaction</groupId>
                 <artifactId>transaction-api</artifactId>
                 <version>${transaction-api.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.atomikos</groupId>
-                <artifactId>atomikos-util</artifactId>
-                <version>${atomikos.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.atomikos</groupId>
-                <artifactId>transactions-jdbc</artifactId>
-                <version>${atomikos.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.atomikos</groupId>
-                <artifactId>transactions-api</artifactId>
-                <version>${atomikos.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.atomikos</groupId>
                 <artifactId>transactions-jta</artifactId>
-                <version>${atomikos.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.atomikos</groupId>
-                <artifactId>transactions</artifactId>
                 <version>${atomikos.version}</version>
             </dependency>
 
@@ -872,6 +857,7 @@
                 <configuration>
                     <source>${java.version}</source>
                     <target>${java.version}</target>
+                    <encoding>UTF-8</encoding>
                 </configuration>
             </plugin>
             <plugin>
@@ -971,34 +957,6 @@
                         <id>attach-sources</id>
                         <goals>
                             <goal>jar-no-fork</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>animal-sniffer-maven-plugin</artifactId>
-                <configuration>
-                    <skip>${disable.checks}</skip>
-                    <signature>
-                        <groupId>org.codehaus.mojo.signature</groupId>
-                        <artifactId>java18</artifactId>
-                        <version>1.0</version>
-                    </signature>
-                    <annotations>
-                        <annotation>org.springframework.boot.lang.UsesUnsafeJava</annotation>
-                    </annotations>
-                    <excludeDependencies>
-                        <excludeDependency>org.glassfish.hk2.external:asm-all-repackaged
-                        </excludeDependency>
-                    </excludeDependencies>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>enforce-java-8</id>
-                        <phase>test</phase>
-                        <goals>
-                            <goal>check</goal>
                         </goals>
                     </execution>
                 </executions>

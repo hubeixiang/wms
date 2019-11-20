@@ -36,10 +36,6 @@
             <artifactId>spring-boot-configuration-processor</artifactId>
             <optional>true</optional>
         </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-        </dependency>
 
         <!-- data source -->
         <dependency>
@@ -72,28 +68,16 @@
 
         <!-- transaction & atomikos -->
         <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-jdbc</artifactId>
+        </dependency>
+        <dependency>
             <groupId>javax.transaction</groupId>
             <artifactId>transaction-api</artifactId>
         </dependency>
         <dependency>
             <groupId>com.atomikos</groupId>
-            <artifactId>atomikos-util</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.atomikos</groupId>
             <artifactId>transactions-jdbc</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.atomikos</groupId>
-            <artifactId>transactions-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.atomikos</groupId>
-            <artifactId>transactions-jta</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.atomikos</groupId>
-            <artifactId>transactions</artifactId>
         </dependency>
     </dependencies>
 

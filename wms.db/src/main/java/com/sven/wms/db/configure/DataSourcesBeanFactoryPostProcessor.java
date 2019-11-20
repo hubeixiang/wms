@@ -13,7 +13,10 @@ import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.BeanDefinitionRegistryPostProcessor;
-import org.springframework.boot.bind.PropertiesConfigurationFactory;
+import org.springframework.boot.context.properties.bind.Bindable;
+import org.springframework.boot.context.properties.bind.Binder;
+import org.springframework.boot.context.properties.source.ConfigurationPropertySource;
+import org.springframework.boot.context.properties.source.ConfigurationPropertySources;
 import org.springframework.core.env.ConfigurableEnvironment;
 
 /**
@@ -28,11 +31,25 @@ public class DataSourcesBeanFactoryPostProcessor implements BeanDefinitionRegist
 
 	private BeanDefinitionRegistry registry;
 
+	//spring 1.x.0
+	//	public DataSourcesBeanFactoryPostProcessor(ConfigurableEnvironment environment) {
+	//		PropertiesConfigurationFactory<DataSourceProperties> factory = new PropertiesConfigurationFactory<>(DataSourceProperties.class);
+	//		try {
+	//			factory.setPropertySources(environment.getPropertySources());
+	//			dataSourceProperties = factory.getObject();
+	//		} catch (Exception e) {
+	//			logger.error("Fail to get data source properties.", e);
+	//		}
+	//	}
+
+	//spring 2.x.0
 	public DataSourcesBeanFactoryPostProcessor(ConfigurableEnvironment environment) {
-		PropertiesConfigurationFactory<DataSourceProperties> factory = new PropertiesConfigurationFactory<>(DataSourceProperties.class);
+		Iterable<ConfigurationPropertySource> sources = ConfigurationPropertySources.get(environment);// 设置Binder
+		Binder binder = new Binder(sources);
+		// 属性绑定
 		try {
-			factory.setPropertySources(environment.getPropertySources());
-			dataSourceProperties = factory.getObject();
+			DataSourceProperties dataSourceProperties = binder.bind("", Bindable.of(DataSourceProperties.class)).get();
+			this.dataSourceProperties = dataSourceProperties;
 		} catch (Exception e) {
 			logger.error("Fail to get data source properties.", e);
 		}
