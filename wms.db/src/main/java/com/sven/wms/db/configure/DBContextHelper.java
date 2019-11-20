@@ -6,13 +6,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.ClassUtils;
 
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
+
 /**
  * @author sven
  * @date 2019/2/15 14:43
  */
 public class DBContextHelper {
 	private static Logger logger = LoggerFactory.getLogger(DBContextHelper.class);
+	private final ReentrantReadWriteLock readWriteLock = new ReentrantReadWriteLock();
 	private static DBContextHelper dbContextHelper;
+	private ConcurrentMap<String, SqlSessionTemplateInfo> dbSqlSessionTemplateInfo = new ConcurrentHashMap<>();
 
 	private DBContextHelper() {
 	}
@@ -62,6 +68,34 @@ public class DBContextHelper {
 			logger.error(String.format("DBContextHelper.getSqlSessionTemplate(%s) Exception", key), e);
 		}
 		return null;
+	}
+
+	public SqlSessionTemplateInfo getSqlSessionTemplateInfo(String dataSourceName) {
+		try {
+			readWriteLock.readLock().lock();
+			SqlSessionTemplateInfo sqlSessionTemplateInfo = dbSqlSessionTemplateInfo.get(dataSourceName);
+			if (sqlSessionTemplateInfo != null) {
+				return sqlSessionTemplateInfo;
+			}
+		} finally {
+			readWriteLock.readLock().unlock();
+		}
+		return initSqlSessionTemplateInfo(dataSourceName);
+	}
+
+	private SqlSessionTemplateInfo initSqlSessionTemplateInfo(String dataSourceName) {
+		try {
+			readWriteLock.writeLock().lock();
+			SqlSessionTemplate sqlSessionTemplate = getSqlSessionTemplate(dataSourceName);
+			if (sqlSessionTemplate == null) {
+				throw new RuntimeException(String.format("db=%s is not exists!", dataSourceName));
+			}
+			SqlSessionTemplateInfo sqlSessionTemplateInfo = new SqlSessionTemplateInfo(dataSourceName, sqlSessionTemplate);
+			dbSqlSessionTemplateInfo.put(sqlSessionTemplateInfo.getDataSourceName(), sqlSessionTemplateInfo);
+			return sqlSessionTemplateInfo;
+		} finally {
+			readWriteLock.writeLock().unlock();
+		}
 	}
 
 	private String toUpperCaseFirstOne(String s) {

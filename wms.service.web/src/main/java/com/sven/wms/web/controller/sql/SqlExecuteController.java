@@ -4,7 +4,11 @@ import com.sven.wms.business.transaction.TransactionBusiness;
 import com.sven.wms.configuration.configuration.DataSourceProperties;
 import com.sven.wms.core.entity.vo.LowerCaseResultMap;
 import com.sven.wms.db.configure.DBContextHelper;
+import com.sven.wms.db.configure.SqlSessionTemplateInfo;
 import com.sven.wms.db.dao.mapper.GenericMapper;
+import com.sven.wms.db.exception.SqlExecuteException;
+import com.sven.wms.db.param.custom.CustomDecorates;
+import com.sven.wms.db.service.CustomDecorateService;
 import com.sven.wms.utils.JsonUtils;
 import com.sven.wms.web.controller.BaseController;
 import com.sven.wms.web.model.CommonServiceResult;
@@ -43,10 +47,10 @@ public class SqlExecuteController extends BaseController {
 	private Logger logger = LoggerFactory.getLogger(SqlExecuteController.class);
 
 	@Autowired
-	private TransactionBusiness transactionBusiness;
+	private DataSourceProperties dataSourceProperties;
 
 	@Autowired
-	private DataSourceProperties dataSourceProperties;
+	CustomDecorateService customDecorateService;
 
 	@ResponseBody
 	@ApiOperation(value = "查询加载数据库以及数据对应的sqlid", notes = "查询加载数据库以及数据对应的sqlid")
@@ -57,19 +61,8 @@ public class SqlExecuteController extends BaseController {
 		Map<String, List<String>> resultListMap = new HashMap<>();
 		for (Map.Entry<String, DataSourceProperties.DataSourceConfig> entry : dataSourceProperties.getDb().entrySet()) {
 			String db = entry.getKey();
-			SqlSessionTemplate sqlSessionTemplate = DBContextHelper.getInstance().getSqlSessionTemplate(db);
-			List<String> sqlStatement = new ArrayList<>();
-			if (sqlSessionTemplate != null) {
-				Collection<String> all = sqlSessionTemplate.getConfiguration().getMappedStatementNames();
-				if (all != null) {
-					for (String sqlId : all) {
-						if (sqlId.indexOf('.') != -1) {
-							sqlStatement.add(sqlId);
-						}
-					}
-				}
-			}
-			resultListMap.put(db, sqlStatement);
+			SqlSessionTemplateInfo sqlSessionTemplateInfo = DBContextHelper.getInstance().getSqlSessionTemplateInfo(db);
+			resultListMap.put(db, sqlSessionTemplateInfo.getAllMappedStatementNamesList());
 		}
 		CommonServiceResult result = new CommonServiceResult();
 		result.setDealResult(true);
@@ -188,6 +181,56 @@ public class SqlExecuteController extends BaseController {
 			result.setDealResult(false);
 			result.setErrorMsg("sql的执行方式只能为枚举类型(select/delete/insert/update)");
 			break;
+		}
+		logger.info(String.format("%s end", method));
+		return result;
+	}
+
+	private final static String batchNotes = "\t * 批量执行指定的sql信息.可以指定是事务执行还是非事务执行\n" + "\t * 事务执行:遇到执行异常的sql,回滚整个事务,并抛出异常,以及异常执行的数据\n"
+			+ "\t * 非事务执行:遇到执行异常的sql,整个执行过程中断,抛出异常,以及异常执行的数据.但是不回滚已经执行完毕的sql";
+
+	/**
+	 * 批量执行指定的sql信息.可以指定是事务执行还是非事务执行
+	 * 事务执行:遇到执行异常的sql,回滚整个事务,并抛出异常,以及异常执行的数据
+	 * 非事务执行:遇到执行异常的sql,整个执行过程中断,抛出异常,以及异常执行的数据.但是不回滚已经执行完毕的sql
+	 *
+	 * @param paramters
+	 * @return
+	 */
+	@ResponseBody
+	@ApiOperation(value = "批量执行指定的sqlId", notes = batchNotes)
+	@RequestMapping(produces = WebConstans.WEB_PRODUCES, method = RequestMethod.POST, value = "/batch")
+	public CommonServiceResult batchExecute(
+			@ApiParam(required = true, name = "paramters", value = "批量执行的信息") @RequestBody CustomDecorates paramters) {
+		String method = "batchExecute";
+		boolean isTransaction = paramters.isTransaction();
+		CommonServiceResult result = new CommonServiceResult();
+		logger.info(String.format("%s startting ...,param=%s", method, paramters == null ? null : JsonUtils.toJson(paramters)));
+		if (paramters.getContext() != null && paramters.getContext().size() > 0) {
+			try {
+				if (isTransaction) {
+					customDecorateService.batchTransaction(paramters.getContext());
+				} else {
+					customDecorateService.batch(paramters.getContext());
+				}
+				result.setDealResult(true);
+			} catch (Throwable t) {
+				result.setDealResult(false);
+				if (t instanceof SqlExecuteException) {
+					SqlExecuteException sqlExecuteException = (SqlExecuteException) t;
+					result.setErrorMsg(String.format("sql异常,sqldata=[%s],Exception:%s", JsonUtils.toJson(sqlExecuteException.getSqlData()),
+							sqlExecuteException.getThrowable().getMessage()));
+					logger.error(String.format("%s sqlData=[%s] Execute Throwable:%s", method,
+							JsonUtils.toJson(sqlExecuteException.getSqlData()), sqlExecuteException.getThrowable().getMessage()),
+							sqlExecuteException.getThrowable());
+				} else {
+					logger.error(String.format("%s Execute Throwable:%s", method, t.getMessage()), t);
+					result.setErrorMsg(String.format("批量执行程序异常:%s", t.getMessage()));
+				}
+			}
+		} else {
+			result.setDealResult(false);
+			result.setErrorMsg("批量执行参数信息不能为空");
 		}
 		logger.info(String.format("%s end", method));
 		return result;
