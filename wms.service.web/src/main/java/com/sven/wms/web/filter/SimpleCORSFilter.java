@@ -20,8 +20,10 @@ import java.io.IOException;
 /**
  * @author sven
  * @date 2019/2/15 14:43
+ * @see CorsConfig
  */
-@Component
+//@Component
+@Deprecated
 public class SimpleCORSFilter implements Filter {
 	private static Logger logger = LoggerFactory.getLogger(SimpleCORSFilter.class);
 
