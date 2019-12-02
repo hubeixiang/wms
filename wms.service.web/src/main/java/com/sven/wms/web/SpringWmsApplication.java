@@ -1,6 +1,8 @@
 package com.sven.wms.web;
 
 import com.sven.wms.configuration.configuration.DataSourceProperties;
+import com.sven.wms.db.autoconfigure.atomikos.AtomikosJdbcPoolConfig;
+import com.sven.wms.db.autoconfigure.entity.DatasourceLoaderNames;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -19,7 +21,7 @@ import java.util.Properties;
  */
 @EnableSwagger2
 @EnableTransactionManagement
-@EnableConfigurationProperties({ DataSourceProperties.class })
+@EnableConfigurationProperties({ DataSourceProperties.class , DatasourceLoaderNames.class })
 @SpringBootApplication
 @ComponentScan(basePackages = "com.sven.wms")
 public class SpringWmsApplication {

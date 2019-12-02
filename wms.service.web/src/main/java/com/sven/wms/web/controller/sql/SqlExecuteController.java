@@ -1,8 +1,9 @@
 package com.sven.wms.web.controller.sql;
 
-import com.sven.wms.business.transaction.TransactionBusiness;
 import com.sven.wms.configuration.configuration.DataSourceProperties;
 import com.sven.wms.core.entity.vo.LowerCaseResultMap;
+import com.sven.wms.db.autoconfigure.atomikos.AtomikosJdbcPoolConfig;
+import com.sven.wms.db.autoconfigure.entity.DatasourceLoaderNames;
 import com.sven.wms.db.configure.DBContextHelper;
 import com.sven.wms.db.configure.SqlSessionTemplateInfo;
 import com.sven.wms.db.dao.mapper.GenericMapper;
@@ -30,8 +31,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,6 +44,12 @@ import java.util.Map;
 @Api(value = "sql执行相关操作", tags = "sql执行相关操作")
 public class SqlExecuteController extends BaseController {
 	private Logger logger = LoggerFactory.getLogger(SqlExecuteController.class);
+
+	@Autowired(required=false)
+	DatasourceLoaderNames datasourceLoaderNames;
+
+	@Autowired(required=false)
+	AtomikosJdbcPoolConfig atomikosJdbcPoolConfig;
 
 	@Autowired
 	private DataSourceProperties dataSourceProperties;
