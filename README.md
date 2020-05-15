@@ -10,6 +10,8 @@
 请参看工程wms.parent目录下的settings.xxml
 maven的host地址配置为wmsmvnhost
 
+## 基于spring boot 2.2.0 开发
+
 ## 部署后测试地址
 * http://发布的host:8808/wms/nav/init
 * http://127.0.0.1:8808/wms/swagger-ui.html  使用swagger管理的rest api访问地址
