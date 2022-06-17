@@ -44,7 +44,7 @@
         <zookeeper.version>3.4.6</zookeeper.version>
         <apache-curator.version>2.5.0</apache-curator.version>
         <!-- json & json serialize  -->
-        <fastjson.version>1.2.31</fastjson.version>
+        <fastjson.version>1.2.83</fastjson.version>
         <guava.version>19.0</guava.version>
         <!-- transaction & atomikos -->
         <transaction-api.version>1.1</transaction-api.version>
