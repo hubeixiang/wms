@@ -30,7 +30,7 @@
         <slf4j.logging.version>1.7.21</slf4j.logging.version>
         <!-- spring & spring boot -->
         <sven-wms.version>${project.version}</sven-wms.version>
-        <spring-boot.version>2.2.0.RELEASE</spring-boot.version>
+        <spring-boot.version>2.2.11.RELEASE</spring-boot.version>
         <!-- spring swagger -->
         <spring-swagger.version>2.4.0</spring-swagger.version>
         <!-- database jdbc driver -->
